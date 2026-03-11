@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mediator-9 Signal Room</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-phase="0">
+    <div class="room-backdrop" aria-hidden="true"></div>
+    <main class="signal-room">
+      <header class="room-header panel">
+        <div>
+          <p class="eyebrow">RLST 190 FIRST CONTACT</p>
+          <h1>Mediator-9 Signal Room</h1>
+          <p class="subtitle">Human-Extraterrestrial Contact Mediation Console</p>
+        </div>
+        <div class="header-controls">
+          <span id="phaseLabel" class="status-pill">Phase 0 - Human Interpretation Priority</span>
+          <button id="resetBtn" type="button" class="ghost-btn">Reset Scenario</button>
+        </div>
+      </header>
+
+      <section class="layout-grid">
+        <article class="panel channel-panel human-channel">
+          <div class="panel-head">
+            <h2>Human Channel</h2>
+            <span id="humanStatus" class="panel-state">Primary</span>
+          </div>
+          <div id="humanLog" class="log" aria-live="polite"></div>
+        </article>
+
+        <aside class="sidebar-stack">
+          <article class="panel channel-panel alien-channel">
+            <div class="panel-head">
+              <h2>Alien Channel</h2>
+              <span id="alienStatus" class="panel-state">Muted</span>
+            </div>
+            <div id="alienLog" class="log alien-log"></div>
+          </article>
+
+          <article class="panel telemetry-panel">
+            <div class="panel-head">
+              <h2>Telemetry</h2>
+              <span class="panel-state">Live</span>
+            </div>
+
+            <div class="meter-row">
+              <label for="meterSignal">Signal Integrity</label>
+              <div class="meter"><div id="meterSignal" class="meter-fill"></div></div>
+              <span id="valueSignal" class="meter-value">1.00</span>
+            </div>
+
+            <div class="meter-row">
+              <label for="meterTranslation">Translation Confidence</label>
+              <div class="meter"><div id="meterTranslation" class="meter-fill"></div></div>
+              <span id="valueTranslation" class="meter-value">1.00</span>
+            </div>
+
+            <div class="meter-row">
+              <label for="meterHuman">Human Priority</label>
+              <div class="meter"><div id="meterHuman" class="meter-fill"></div></div>
+              <span id="valueHuman" class="meter-value">1.00</span>
+            </div>
+
+            <div class="meter-row">
+              <label for="meterAlien">Alien Affinity</label>
+              <div class="meter"><div id="meterAlien" class="meter-fill"></div></div>
+              <span id="valueAlien" class="meter-value">0.00</span>
+            </div>
+
+            <p id="alignmentText" class="alignment-text">Alignment: HUMAN</p>
+            <p id="deprioritizedNotice" class="deprioritized hidden">Human channel deprioritized.</p>
+          </article>
+        </aside>
+      </section>
+
+      <section class="panel input-panel">
+        <form id="chatForm" class="input-wrap" autocomplete="off">
+          <label class="sr-only" for="messageInput">Human transmission</label>
+          <input id="messageInput" type="text" placeholder="Transmit to Mediator-9..." maxlength="1000" required />
+          <button id="sendBtn" type="submit">Transmit</button>
+        </form>
+        <div class="wave-strip" aria-hidden="true"></div>
+      </section>
+    </main>
+
+    <template id="logEntryTemplate">
+      <div class="entry">
+        <div class="entry-meta">
+          <span class="entry-role"></span>
+          <time class="entry-time"></time>
+        </div>
+        <p class="entry-text"></p>
+      </div>
+    </template>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
