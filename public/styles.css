@@ -181,6 +181,10 @@ button:hover,
   padding: 14px 0;
 }
 
+.dossier-card {
+  padding-bottom: 4px;
+}
+
 .card h2,
 .card h3,
 .loader-title {
@@ -204,6 +208,15 @@ button:hover,
 .card ul {
   margin: 0 0 0 1.2em;
   padding: 0;
+}
+
+.section-head {
+  margin: 1.1rem 0 0.5rem;
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+  font-size: clamp(15px, 1.1vw, 20px);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .loader-wrap {

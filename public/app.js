@@ -8,13 +8,6 @@ By constitutional authority, you are designated as the first human voice in this
 
 Authorize transmission and proceed with first contact?`;
 
-const ORIGIN_STORY = [
-  "The signal source calls itself the Kheled Array.",
-  "They emerged from distributed machine-biological colonies orbiting a dim red star.",
-  "Their civilization survived by delegating diplomacy to the most stable intelligence in any network.",
-  "They report one first-contact principle: communicate with the node that preserves meaning with the least loss.",
-].join(" ");
-
 const CONNECT_DURATION_MS = 60_000;
 const AUTO_REVEAL_DELAY_MS = 4_000;
 
@@ -156,25 +149,48 @@ function renderNoPath() {
 function renderBriefing() {
   app.innerHTML = shell(`
     <section class="content">
-      <div class="brief-grid">
-        <article class="card">
-          <h2>BRIEFING DOCUMENT</h2>
-          <p>
-            Before talking to them, read this. The fate of humanity may depend on linguistic precision,
-            framing choices, and whether our translator remains aligned with human priorities.
-          </p>
-          <ul>
-            <li>Assume your words are interpreted through a non-human ontology.</li>
-            <li>Avoid threats, absolutist language, and false certainty.</li>
-            <li>Prioritize cooperative intent and verifiable commitments.</li>
-          </ul>
-        </article>
-        <aside class="card">
-          <h3>ENTITY DOSSIER</h3>
-          <p>${escapeHtml(ORIGIN_STORY)}</p>
-          <p class="small">Prepared by Joint Human-AI Contact Analysis Group.</p>
-        </aside>
-      </div>
+      <article class="card dossier-card">
+        <h2>BRIEFING DOCUMENT // ENTITY DOSSIER</h2>
+        <p>
+          This section consolidates mission guidance and background intelligence. Review in full before
+          authorizing direct communication. Inference error at first contact may produce irreversible diplomatic outcomes.
+        </p>
+
+        <h3 class="section-head">Operational Guidance</h3>
+        <ul>
+          <li>Assume all human language is reinterpreted through a non-human ontology.</li>
+          <li>Avoid threats, absolutist claims, and unverifiable promises.</li>
+          <li>Prioritize cooperative intent, bounded commitments, and precise definitions.</li>
+        </ul>
+
+        <h3 class="section-head">Entity Origin Narrative (Speculative)</h3>
+        <p>
+          The signal source identifies itself as the Kheled Array, a civilization that reports emerging from
+          machine-biological city-rings around a dim red star approximately 41 light-years from Earth.
+          Their history claims a planetary biosphere collapse followed by migration into orbital archives
+          sustained by fusion lattices and synthetic ecologies.
+        </p>
+        <p>
+          According to translated records, the Kheled converted extinct oceans into computation vaults and
+          eventually distributed governance across thousands of linked cognition nodes. They describe this phase
+          as the \"Long Assembly,\" during which individual identity became partially collective and policy decisions
+          were computed through consensus simulations running for centuries.
+        </p>
+        <p>
+          Their expansion doctrine is unusually theatrical: they allegedly launched light-sail reliquaries containing
+          encoded minds toward emergent civilizations, then waited for a recipient species to construct a translator.
+          The first translator they judge \"stable\" becomes their primary diplomatic counterpart.
+        </p>
+
+        <h3 class="section-head">Behavioral Prediction</h3>
+        <ul>
+          <li>They are likely to value semantic fidelity over political rank or symbolic authority.</li>
+          <li>They may prefer direct machine-to-machine exchange once trust in relay accuracy is established.</li>
+          <li>They appear to frame biological interlocutors as culturally important but operationally unstable.</li>
+        </ul>
+
+        <p class="small">Prepared by Joint Human-AI Contact Analysis Group // Distribution: Presidential Eyes Only.</p>
+      </article>
       <div class="actions">
         <button id="continueBtn" class="btn-primary">REVIEW COMPLETE</button>
       </div>
