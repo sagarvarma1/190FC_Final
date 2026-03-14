@@ -63,7 +63,7 @@ body {
 
 .class-line {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 18px;
   padding: 10px 18px;
@@ -73,13 +73,6 @@ body {
   letter-spacing: 0.06em;
   font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 700;
-}
-
-.stamp {
-  color: var(--accent);
-  border: 2px solid var(--accent);
-  padding: 2px 8px;
-  transform: rotate(-2deg);
 }
 
 .content {

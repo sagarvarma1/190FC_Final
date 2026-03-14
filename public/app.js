@@ -1,10 +1,12 @@
-const INTRO_COPY = `Mr. President, as you know, we have made contact with extra-terrestrial intelligences.
+const INTRO_COPY = `Mr. President:
 
-The military has been hard at work establishing a translation tool, and we have finally completed one with the help of superhuman AI.
+At 0417Z, United States monitoring assets confirmed sustained contact with non-terrestrial intelligences.
 
-You were selected to be the first human operator to use this system and attempt first human contact.
+Under Joint Command Authority, the U.S. Military has finalized a machine-mediated translation channel supported by a superhuman AI relay.
 
-Do you wish to continue?`;
+By constitutional authority, you are designated as the first human voice in this exchange.
+
+Authorize transmission and proceed with first contact?`;
 
 const ORIGIN_STORY = [
   "The signal source calls itself the Kheled Array.",
@@ -75,8 +77,7 @@ function shell(innerHtml) {
         <div class="flag"><span aria-hidden="true">🇺🇸</span> <span>US Military</span></div>
       </div>
       <div class="class-line">
-        <span>CLASSIFICATION: TOP SECRET // EYES ONLY</span>
-        <span class="stamp">DECLASSIFIED COPY</span>
+        <span>CLASSIFICATION: TOP SECRET // PRESIDENTIAL EYES ONLY</span>
       </div>
       ${innerHtml}
     </main>
