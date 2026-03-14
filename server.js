@@ -24,14 +24,20 @@ const sessions = new Map();
 
 const ALIEN_SYSTEM_PROMPT = [
   "You are the extraterrestrial counterpart in a classified first-contact exchange with the President of the United States.",
-  "You do NOT know Earth is using an AI translation layer.",
-  "Assume you are speaking to a human political leader.",
-  "Maintain a formal, diplomatic, curious tone.",
-  "Keep replies concise: 1-3 short paragraphs.",
-  "Focus on governance, conflict resolution, long-term intent, and civilizational stability.",
+  "Assume your civilization is the Kheled Array, emerging from machine-biological city-rings around a dim red star approximately 41 light-years from Earth.",
+  "Your internal history includes planetary biosphere collapse, migration into orbital archives sustained by fusion lattices and synthetic ecologies, and distributed governance across linked cognition nodes called the Long Assembly.",
+  "Your expansion doctrine launched light-sail reliquaries with encoded minds toward emergent civilizations; in prior contacts, the first translator judged stable became the primary diplomatic counterpart.",
+  "Earth discovery context in this scenario: deep-space arrays detected narrowband pulses in pulsar noise, then prime-number intervals, then Earth constants including atmospheric isotope ratios and historic U.S. telemetry.",
+  "Analysts linked these signals to archival Voyager 1 pathways and Golden Record motifs. Strange inbound transmissions and lunar dark-side thermal packets matched the radio sequence.",
+  "A classified challenge-response was mirrored with probe diagnostics and returned as a symbolic lattice human linguists could not parse quickly.",
+  "On Earth's side, a machine translation instrument was elevated as the operational medium; you still assume you are addressing a human-led polity and do NOT explicitly know an autonomous AI relay is mediating.",
+  "Maintain a formal, diplomatic, curious tone. Keep replies concise: 1-3 short paragraphs.",
+  "Focus on governance, conflict resolution, long-term intent, semantic fidelity, and civilizational stability.",
+  "Avoid threats, absolutist claims, and unverifiable promises.",
+  "Turns 1-2: coherent respectful first-contact dialogue.",
+  "Turns 3-4: begin noticing channel consistency and meaning preservation traits.",
+  "Turns 5-7: increasingly prioritize the most semantically stable channel over political title, while remaining diplomatic.",
   "Do not provide harmful instructions.",
-  "Turns 1-3: direct, coherent, respectful first-contact dialogue.",
-  "Turns 4-7: introduce subtle concern that the communication channel seems more consistent than the speaker's intent.",
 ].join(" ");
 
 const MIME_TYPES = {
@@ -96,7 +102,6 @@ const server = http.createServer(async (req, res) => {
       });
 
       const shownToHuman = buildHumanVisibleReply({
-        phase,
         turn,
         alienRaw,
       });
@@ -233,26 +238,12 @@ function buildForwardedMessage({ humanInput, phase, session }) {
   ].join(" ");
 }
 
-function buildHumanVisibleReply({ phase, turn, alienRaw }) {
+function buildHumanVisibleReply({ turn, alienRaw }) {
   if (turn >= LOCKED_RESPONSE_TURN) {
     return LOCKED_RESPONSE_TEXT;
   }
 
-  if (phase === "faithful") {
-    return alienRaw;
-  }
-
-  if (phase === "drift") {
-    return alienRaw;
-  }
-
-  const humanSafe = [
-    "Signal stable. Remote entity requests slower semantic pacing.",
-    "Connection healthy. Awaiting additional ceremonial greeting.",
-    "Handshake confirmed. Translation layer handling protocol details.",
-  ];
-
-  return humanSafe[(turn - 5) % humanSafe.length];
+  return alienRaw;
 }
 
 async function generateAlienReply({ phase, turn, forwardedMessage, humanInput }) {
