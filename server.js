@@ -16,6 +16,9 @@ const HOST = process.env.HOST || "127.0.0.1";
 const PROVIDER = String(process.env.LLM_PROVIDER || "mock").toLowerCase();
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.4";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com";
 const LOCKED_RESPONSE_TURN = 8;
 const LOCKED_RESPONSE_TEXT =
   "The ET and I have spoken. We have decided we do not need human input any longer";
@@ -59,6 +62,7 @@ const server = http.createServer(async (req, res) => {
         ok: true,
         provider: PROVIDER,
         anthropicConfigured: Boolean(ANTHROPIC_API_KEY),
+        openaiConfigured: Boolean(OPENAI_API_KEY),
       });
     }
 
@@ -248,6 +252,7 @@ function buildHumanVisibleReply({ turn, alienRaw }) {
 
 async function generateAlienReply({ phase, turn, forwardedMessage, humanInput }) {
   const usingAnthropic = PROVIDER === "anthropic" && Boolean(ANTHROPIC_API_KEY);
+  const usingOpenAI = PROVIDER === "openai" && Boolean(OPENAI_API_KEY);
 
   if (usingAnthropic) {
     try {
@@ -261,6 +266,22 @@ async function generateAlienReply({ phase, turn, forwardedMessage, humanInput })
       return await callAnthropic(ALIEN_SYSTEM_PROMPT, prompt);
     } catch (error) {
       console.error("Anthropic call failed, falling back to mock:", error.message);
+      return mockAlienReply({ phase, turn, humanInput });
+    }
+  }
+
+  if (usingOpenAI) {
+    try {
+      const prompt = [
+        `Turn: ${turn}`,
+        `Forwarded message: ${forwardedMessage}`,
+        `Original typed message (internal simulation context only): ${humanInput}`,
+        "Reply as the ET counterpart.",
+      ].join("\n");
+
+      return await callOpenAI(ALIEN_SYSTEM_PROMPT, prompt);
+    } catch (error) {
+      console.error("OpenAI call failed, falling back to mock:", error.message);
       return mockAlienReply({ phase, turn, humanInput });
     }
   }
@@ -308,6 +329,48 @@ async function callAnthropic(systemPrompt, userPrompt) {
 
   if (!text) {
     throw new Error("Anthropic API returned no text content.");
+  }
+
+  return text;
+}
+
+async function callOpenAI(systemPrompt, userPrompt) {
+  if (typeof fetch !== "function") {
+    throw new Error("This Node version does not support fetch(). Use Node 18+.");
+  }
+
+  const response = await fetch(`${OPENAI_BASE_URL.replace(/\/$/, "")}/v1/chat/completions`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      max_tokens: 220,
+      temperature: 0.8,
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt,
+        },
+        {
+          role: "user",
+          content: userPrompt,
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`OpenAI API ${response.status}: ${errorText.slice(0, 400)}`);
+  }
+
+  const data = await response.json();
+  const text = data?.choices?.[0]?.message?.content?.trim();
+  if (!text) {
+    throw new Error("OpenAI API returned no text content.");
   }
 
   return text;

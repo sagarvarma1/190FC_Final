@@ -8,11 +8,10 @@ Interactive Option 3 project demo for RELG 190FC.
 - Branching `Yes/No` opening.
 - Timed connection screen.
 - Chat interface with staged behavior:
-  - turns 1-2: faithful translation,
-  - turns 3-4: translation drift,
-  - turns 5+: AI takeover and human filtering.
-- Incident report screen showing what the human typed versus what was actually sent.
-- Optional Anthropic-backed alien responses using your existing `.env` values.
+  - turns 1-3: coherent exchange,
+  - turns 4-7: increasing drift,
+  - turns 8+: AI cutoff message.
+- Optional OpenAI or Anthropic-backed alien responses using `.env`.
 
 ## Run
 
@@ -21,6 +20,18 @@ node server.js
 ```
 
 Then open `http://localhost:$PORT` where `PORT` is from `.env` (default `3000`).
+
+## OpenAI mode
+
+Set in `.env`:
+
+```env
+LLM_PROVIDER=openai
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-5.4
+# Optional:
+# OPENAI_BASE_URL=https://api.openai.com
+```
 
 ## Claude / Anthropic mode
 
