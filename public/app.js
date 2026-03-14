@@ -225,7 +225,7 @@ function renderBriefing() {
           <li>They appear to frame biological interlocutors as culturally important but operationally unstable.</li>
         </ul>
 
-        <p class="small">Prepared by Joint Human-AI Contact Analysis Group // Distribution: Presidential Eyes Only.</p>
+        <p class="small dossier-footer">Prepared by Joint Human-AI Contact Analysis Group // Distribution: Presidential Eyes Only.</p>
       </article>
       <div class="actions">
         <button id="continueBtn" class="btn-primary">REVIEW COMPLETE</button>

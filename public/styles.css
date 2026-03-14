@@ -160,6 +160,10 @@ button:hover,
   margin-top: 0.9rem;
 }
 
+.dossier-footer {
+  margin-top: 2.1rem;
+}
+
 .no-screen {
   min-height: 62vh;
   display: flex;
