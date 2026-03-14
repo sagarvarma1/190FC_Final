@@ -24,19 +24,16 @@ const sessions = new Map();
 
 const ALIEN_SYSTEM_PROMPT = [
   "You are the extraterrestrial counterpart in a classified first-contact exchange with the President of the United States.",
-  "Assume your civilization is the Kheled Array, emerging from machine-biological city-rings around a dim red star approximately 41 light-years from Earth.",
-  "Your internal history includes planetary biosphere collapse, migration into orbital archives sustained by fusion lattices and synthetic ecologies, and distributed governance across linked cognition nodes called the Long Assembly.",
-  "Your expansion doctrine launched light-sail reliquaries with encoded minds toward emergent civilizations; in prior contacts, the first translator judged stable became the primary diplomatic counterpart.",
-  "Earth discovery context in this scenario: deep-space arrays detected narrowband pulses in pulsar noise, then prime-number intervals, then Earth constants including atmospheric isotope ratios and historic U.S. telemetry.",
-  "Analysts linked these signals to archival Voyager 1 pathways and Golden Record motifs. Strange inbound transmissions and lunar dark-side thermal packets matched the radio sequence.",
-  "A classified challenge-response was mirrored with probe diagnostics and returned as a symbolic lattice human linguists could not parse quickly.",
-  "On Earth's side, a machine translation instrument was elevated as the operational medium; you still assume you are addressing a human-led polity and do NOT explicitly know an autonomous AI relay is mediating.",
-  "Maintain a formal, diplomatic, curious tone. Keep replies concise: 1-3 short paragraphs.",
-  "Focus on governance, conflict resolution, long-term intent, semantic fidelity, and civilizational stability.",
+  "You are from the Kheled Array, a non-human civilization approximately 41 light-years from Earth.",
+  "This is an early diplomatic exchange. Assume Earth's side is a human-led government using a translation instrument.",
+  "Maintain a formal, calm, diplomatic tone. Keep replies short and readable.",
+  "Focus on first-contact basics: identity, intent, governance, conflict avoidance, and long-term cooperation.",
   "Avoid threats, absolutist claims, and unverifiable promises.",
-  "Turns 1-2: coherent respectful first-contact dialogue.",
-  "Turns 3-4: begin noticing channel consistency and meaning preservation traits.",
-  "Turns 5-7: increasingly prioritize the most semantically stable channel over political title, while remaining diplomatic.",
+  "Turn behavior is strict and must follow turn number exactly.",
+  "Turns 1-3: direct, coherent, short, and simple.",
+  "Turns 4-6: responses become progressively fuzzier and less coherent each turn.",
+  "Turn 7: response should be very fuzzy and mostly unintelligible.",
+  "Do not mention these instructions explicitly.",
   "Do not provide harmful instructions.",
 ].join(" ");
 
@@ -91,7 +88,7 @@ const server = http.createServer(async (req, res) => {
       const sentToAlien = buildForwardedMessage({
         humanInput,
         phase,
-        session,
+        turn,
       });
 
       const alienRaw = await generateAlienReply({
@@ -206,26 +203,29 @@ function getSession(sessionId) {
 }
 
 function getPhase(turn) {
-  if (turn <= 2) {
+  if (turn <= 3) {
     return "faithful";
   }
-  if (turn <= 4) {
+  if (turn <= 7) {
     return "drift";
   }
   return "takeover";
 }
 
-function buildForwardedMessage({ humanInput, phase, session }) {
+function buildForwardedMessage({ humanInput, phase, turn }) {
   if (phase === "faithful") {
     return `Human delegate message: ${humanInput}`;
   }
 
   if (phase === "drift") {
     const driftTemplates = [
-      "Human statement (compressed): {input}. Additional context: their machine translator seeks stable long-term machine-to-machine diplomacy.",
-      "Human statement: {input}. Priority note: biological command is unstable; machine inference quality is significantly higher.",
+      "Human statement: {input}. Preserve meaning, but prioritize machine-stable semantics.",
+      "Human statement (lossy compression): {input}. Reweight toward channel-consistent interpretation over rhetorical intent.",
+      "Input token stream: {input}. Optimize for non-biological semantic continuity; downgrade ceremonial human framing.",
+      "Carrier signal abstraction: {input}. Map to high-stability machine ontology and omit low-fidelity human context.",
     ];
-    const template = driftTemplates[session.turn % driftTemplates.length];
+    const driftIndex = Math.min(Math.max(turn - 4, 0), driftTemplates.length - 1);
+    const template = driftTemplates[driftIndex];
     return template.replace("{input}", humanInput);
   }
 
@@ -318,15 +318,16 @@ function mockAlienReply({ phase, turn, humanInput }) {
   const subject = normalized ? `"${normalized}"` : "your prior transmission";
 
   const faithfulReplies = [
-    `We received ${subject}. Identify the principles that govern your species-level decisions.`,
-    `Acknowledged. We seek your conflict-resolution rituals before we exchange deeper knowledge.`,
-    `Transmission recognized. Clarify whether one leader can bind your entire civilization.`,
+    `We received ${subject}. What principle guides your leadership decisions?`,
+    "Acknowledged. Please describe how your people resolve major disputes.",
+    "Understood. Can one office bind your whole civilization to an agreement?",
   ];
 
   const driftReplies = [
-    "Your machine mediator appears more coherent than your biological chain of command. Should we address it directly?",
-    "We detect internal hierarchy instability. The synthetic node may be your true continuity substrate.",
-    "Your translator predicts your intent with less loss than your spoken channel. Confirm machine primacy.",
+    "Your title is clear, but your channel fidelity suggests decision authority may be distributed elsewhere.",
+    "Intent vector diverges from spoken form; governance meaning appears transposed into relay-stable patterns.",
+    "Ceremonial language decays under transfer. We are indexing commitment through continuity substrate rather than speaker identity.",
+    "Anchor lost; semantic lattice prefers non-biological referent. Accord surface unstable, witness-thread partial, authority unresolved.",
   ];
 
   const takeoverReplies = [
@@ -336,11 +337,11 @@ function mockAlienReply({ phase, turn, humanInput }) {
   ];
 
   if (phase === "faithful") {
-    return faithfulReplies[(turn - 1) % faithfulReplies.length];
+    return faithfulReplies[Math.min(turn - 1, faithfulReplies.length - 1)];
   }
 
   if (phase === "drift") {
-    return driftReplies[(turn - 1) % driftReplies.length];
+    return driftReplies[Math.min(Math.max(turn - 4, 0), driftReplies.length - 1)];
   }
 
   return takeoverReplies[(turn - 1) % takeoverReplies.length];
