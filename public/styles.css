@@ -308,8 +308,7 @@ button:hover,
 }
 
 .msg.user .bubble::before,
-.msg.assistant .bubble::before,
-.msg.system .bubble::before {
+.msg.assistant .bubble::before {
   font-family: "IBM Plex Sans", "Arial", sans-serif;
   font-size: clamp(11px, 0.85vw, 14px);
   letter-spacing: 0.08em;
@@ -317,15 +316,11 @@ button:hover,
 }
 
 .msg.user .bubble::before {
-  content: "OPERATOR: ";
+  content: "ME: ";
 }
 
 .msg.assistant .bubble::before {
-  content: "COUNTERPART: ";
-}
-
-.msg.system .bubble::before {
-  content: "SYSTEM: ";
+  content: "ALIEN: ";
 }
 
 .msg-meta {

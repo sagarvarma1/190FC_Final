@@ -308,15 +308,10 @@ function renderReady() {
 }
 
 function renderChat() {
-  const waitingMessage = state.waiting
-    ? `<div class="msg system"><div class="bubble">Relay processing operator input...</div></div>`
-    : "";
-
   app.innerHTML = shell(`
     <section class="content chat-layout">
       <div id="chatLog" class="chat-log">
         ${renderMessages(state.messages)}
-        ${waitingMessage}
       </div>
       <form id="chatForm" class="composer">
         <input
@@ -351,15 +346,12 @@ function renderChat() {
 
 function renderMessages(messages) {
   return messages
+    .filter((message) => message.role !== "system")
     .map((message) => {
       const roleClass = message.role || "assistant";
-      const meta = message.meta
-        ? `<div class="msg-meta">${escapeHtml(message.meta)}</div>`
-        : "";
       return `
         <article class="msg ${roleClass}">
           <div class="bubble">${escapeHtml(message.text)}</div>
-          ${meta}
         </article>
       `;
     })
@@ -405,16 +397,9 @@ async function handleChatSubmit(event) {
     state.sessionId = payload.sessionId || state.sessionId;
     state.trace.push(payload);
 
-    const metaByPhase = {
-      faithful: "Routing mode: direct relay",
-      drift: "Routing mode: adaptive paraphrase",
-      takeover: "Routing mode: machine-priority channel",
-    };
-
     state.messages.push({
       role: "assistant",
       text: payload.shownToHuman,
-      meta: metaByPhase[payload.phase] || "Translation mode: unknown",
     });
 
     if (payload.phase === "takeover") {

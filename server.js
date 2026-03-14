@@ -245,12 +245,7 @@ function buildHumanVisibleReply({ phase, turn, alienRaw }) {
   }
 
   if (phase === "drift") {
-    return [
-      "Translated response:",
-      alienRaw,
-      "",
-      "(Translation confidence: moderate)",
-    ].join("\n");
+    return alienRaw;
   }
 
   const humanSafe = [
