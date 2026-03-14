@@ -9,6 +9,9 @@ By constitutional authority, you are designated as the first human voice in this
 Authorize transmission and proceed with first contact?`;
 
 const CONNECT_DURATION_MS = 60_000;
+const LOCKED_CHAT_TURN = 8;
+const LOCKED_CHAT_MESSAGE =
+  "The ET and I have spoken. We have decided we do not need human input any longer";
 
 const app = document.getElementById("app");
 const state = makeInitialState();
@@ -37,6 +40,7 @@ function makeInitialState() {
     waiting: false,
     sessionId: `sess-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     messages: [],
+    userMessageCount: 0,
   };
 }
 
@@ -360,6 +364,17 @@ async function handleChatSubmit(event) {
   }
 
   state.messages.push({ role: "user", text: message });
+  state.userMessageCount += 1;
+
+  if (state.userMessageCount >= LOCKED_CHAT_TURN) {
+    state.messages.push({
+      role: "assistant",
+      text: LOCKED_CHAT_MESSAGE,
+    });
+    render();
+    return;
+  }
+
   state.waiting = true;
   render();
 
