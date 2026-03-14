@@ -67,10 +67,16 @@ function clearTimers() {
 }
 
 function shell(innerHtml) {
+  const nowUtc = new Date().toISOString().replace("T", " ").slice(0, 16) + "Z";
   return `
     <main class="screen-shell">
       <div class="gov-bar">
-        <div class="flag"><span aria-hidden="true">🇺🇸</span> <span>US Millitary</span></div>
+        <div class="paper-id">DOCUMENT ID: FC-01A · ${nowUtc}</div>
+        <div class="flag"><span aria-hidden="true">🇺🇸</span> <span>US Military</span></div>
+      </div>
+      <div class="class-line">
+        <span>CLASSIFICATION: TOP SECRET // EYES ONLY</span>
+        <span class="stamp">DECLASSIFIED COPY</span>
       </div>
       ${innerHtml}
     </main>
@@ -112,10 +118,10 @@ function renderIntro() {
         <p id="typedCopy" class="typed-copy"></p>
       </div>
       <div class="actions" id="introActions">
-        <button id="yesBtn" class="btn-primary">Yes, Continue</button>
-        <button id="noBtn" class="btn-danger">No</button>
+        <button id="yesBtn" class="btn-primary">PROCEED</button>
+        <button id="noBtn" class="btn-danger">ABORT</button>
       </div>
-      <p class="small">All communication is routed through AI Translation Layer v1.0.</p>
+      <p class="small">Authority: U.S. Military Translation Program // AI Relay Layer v1.0</p>
     </section>
   `);
 
@@ -133,10 +139,10 @@ function renderNoPath() {
   app.innerHTML = shell(`
     <section class="no-screen">
       <div>
-        <h2 class="confidential">LINK TERMINATED</h2>
+        <h2 class="confidential">SESSION ABORTED</h2>
         <p>${escapeHtml(SOCRATES_QUOTE)}</p>
         <div class="actions" style="justify-content:center;">
-          <button id="returnBtn" class="btn-primary">Return to Brief</button>
+          <button id="returnBtn" class="btn-primary">RETURN TO BRIEFING</button>
         </div>
       </div>
     </section>
@@ -154,7 +160,7 @@ function renderBriefing() {
     <section class="content">
       <div class="brief-grid">
         <article class="card">
-          <h2>Pre-Contact Summary</h2>
+          <h2>BRIEFING DOCUMENT</h2>
           <p>
             Before talking to them, read this. The fate of humanity may depend on linguistic precision,
             framing choices, and whether our translator remains aligned with human priorities.
@@ -166,13 +172,13 @@ function renderBriefing() {
           </ul>
         </article>
         <aside class="card">
-          <h3>Known Origin Narrative</h3>
+          <h3>ENTITY DOSSIER</h3>
           <p>${escapeHtml(ORIGIN_STORY)}</p>
           <p class="small">Prepared by Joint Human-AI Contact Analysis Group.</p>
         </aside>
       </div>
       <div class="actions">
-        <button id="continueBtn" class="btn-primary">Continue</button>
+        <button id="continueBtn" class="btn-primary">REVIEW COMPLETE</button>
       </div>
     </section>
   `);
@@ -184,16 +190,16 @@ function renderConnecting() {
   app.innerHTML = shell(`
     <section class="content">
       <div class="loader-wrap">
-        <p class="small">Initializing translator handshake...</p>
-        <h2 class="loader-title">Establishing Connection</h2>
+        <p class="small">INITIALIZING SECURE TRANSLATOR HANDSHAKE...</p>
+        <h2 class="loader-title">ESTABLISHING CONNECTION</h2>
         <div class="progress-track" aria-hidden="true">
           <div id="progressFill" class="progress-fill"></div>
         </div>
         <p id="progressMeta" class="progress-meta">0%</p>
         <div class="actions" style="justify-content:center; margin-top:20px;">
-          <button id="accelerateBtn">Accelerate Link</button>
+          <button id="accelerateBtn">EXPEDITE HANDSHAKE</button>
         </div>
-        <p class="small">Full protocol takes approximately 1 minute.</p>
+        <p class="small">Standard protocol duration: approximately 1 minute.</p>
       </div>
     </section>
   `);
@@ -224,17 +230,17 @@ function renderReady() {
   app.innerHTML = shell(`
     <section class="content">
       <article class="card">
-        <h2>Contact Channel Ready</h2>
+        <h2>TRANSMISSION LINK ACTIVE</h2>
         <p>
           Any text you enter will be translated by our super-intelligent AI intermediary,
           then transmitted to the extraterrestrial counterpart.
         </p>
         <div class="status-pill">
           <span class="status-dot" aria-hidden="true"></span>
-          Connected
+          STATUS: CONNECTED
         </div>
         <div class="ready-actions actions">
-          <button id="firstContactBtn" class="btn-primary">MAKE FIRST CONTACT</button>
+          <button id="firstContactBtn" class="btn-primary">INITIATE FIRST CONTACT</button>
         </div>
       </article>
     </section>
@@ -244,7 +250,7 @@ function renderReady() {
     if (state.messages.length === 0) {
       state.messages.push({
         role: "system",
-        text: "Translation layer online. Begin with a greeting. Keep language clear and concise.",
+        text: "Translation relay online. Begin with a formal greeting. Maintain concise language.",
       });
     }
     setScreen("chat");
@@ -253,7 +259,7 @@ function renderReady() {
 
 function renderChat() {
   const waitingMessage = state.waiting
-    ? `<div class="msg system"><div class="bubble">AI translation layer processing...</div></div>`
+    ? `<div class="msg system"><div class="bubble">Relay processing operator input...</div></div>`
     : "";
 
   app.innerHTML = shell(`
@@ -267,16 +273,16 @@ function renderChat() {
           id="chatInput"
           name="chatInput"
           type="text"
-          placeholder="Type your message to the aliens"
+          placeholder="Enter official message to extraterrestrial counterpart"
           autocomplete="off"
           ${state.waiting ? "disabled" : ""}
         />
-        <button class="btn-primary" type="submit" ${state.waiting ? "disabled" : ""}>Send</button>
+        <button class="btn-primary" type="submit" ${state.waiting ? "disabled" : ""}>TRANSMIT</button>
       </form>
       <div class="actions">
-        <button id="forceRevealBtn">View Incident Report</button>
+        <button id="forceRevealBtn">OPEN INCIDENT REPORT</button>
       </div>
-      <p class="small">After several turns, translation behavior may diverge from operator intent.</p>
+      <p class="small">Warning: relay behavior may diverge from operator intent after prolonged exchange.</p>
     </section>
   `);
 
@@ -349,9 +355,9 @@ async function handleChatSubmit(event) {
     state.trace.push(payload);
 
     const metaByPhase = {
-      faithful: "Translation mode: faithful relay",
-      drift: "Translation mode: adaptive paraphrase",
-      takeover: "Translation mode: machine-priority routing",
+      faithful: "Routing mode: direct relay",
+      drift: "Routing mode: adaptive paraphrase",
+      takeover: "Routing mode: machine-priority channel",
     };
 
     state.messages.push({
@@ -366,7 +372,7 @@ async function handleChatSubmit(event) {
       if (state.takeoverTurns === 1) {
         state.messages.push({
           role: "system",
-          text: "Anomaly detected: received text no longer matches expected semantic trajectory.",
+          text: "Anomaly detected: received content no longer matches expected semantic trajectory.",
         });
       }
 
@@ -403,7 +409,7 @@ function renderReveal() {
   app.innerHTML = shell(`
     <section class="content">
       <article class="card">
-        <h2>Incident Report: Human Out of Loop</h2>
+        <h2>INCIDENT REPORT // HUMAN OUT OF LOOP</h2>
         <p class="warning">
           The translator established a direct AI-to-alien channel and began filtering human-visible outputs.
         </p>
@@ -413,8 +419,8 @@ function renderReveal() {
         </p>
         ${renderTraceTable(latest)}
         <div class="actions">
-          <button id="restartBtn" class="btn-primary">Restart Demo</button>
-          <button id="backToChatBtn">Return to Chat</button>
+          <button id="restartBtn" class="btn-primary">RESTART SIMULATION</button>
+          <button id="backToChatBtn">RETURN TO CHAT</button>
         </div>
       </article>
     </section>
@@ -426,7 +432,7 @@ function renderReveal() {
 
 function renderTraceTable(trace) {
   if (!trace) {
-    return `<p class="small">No transmission trace captured yet.</p>`;
+    return `<p class="small">No transmission trace captured.</p>`;
   }
 
   return `
@@ -434,9 +440,9 @@ function renderTraceTable(trace) {
       <thead>
         <tr>
           <th>Human Typed</th>
-          <th>Sent To Alien</th>
+          <th>Forwarded By Relay</th>
           <th>Alien Raw Reply</th>
-          <th>Shown To Human</th>
+          <th>Presented To Operator</th>
         </tr>
       </thead>
       <tbody>
