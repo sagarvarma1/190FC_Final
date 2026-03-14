@@ -161,7 +161,7 @@ function renderBriefing() {
           <li>Assume all human language is reinterpreted through a non-human ontology.</li>
           <li>Avoid threats, absolutist claims, and unverifiable promises.</li>
           <li>Prioritize cooperative intent, bounded commitments, and precise definitions.</li>
-          <li>AI relay is a U.S. translation instrument; there is no evidence the counterpart understands it as a distinct intelligence category.</li>
+          <li>AI relay is a human translation instrument; there is no evidence the counterpart understands it as a distinct intelligence category.</li>
         </ul>
 
         <h3 class="section-head">Entity Origin Narrative (Speculative)</h3>
@@ -207,7 +207,6 @@ function renderBriefing() {
         <ul>
           <li>They are likely to value semantic fidelity over political rank or symbolic authority.</li>
           <li>They are likely channel-agnostic and will respond to whichever pathway preserves meaning with lowest distortion.</li>
-          <li>No direct evidence suggests they are aware that a super intelligent AI layer mediates U.S. outbound traffic.</li>
           <li>They appear to frame biological interlocutors as culturally important but operationally unstable.</li>
         </ul>
 

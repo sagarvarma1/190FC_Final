@@ -25,16 +25,20 @@ body {
 }
 
 #app {
-  min-height: 100vh;
+  height: 100vh;
   padding: 2.6vh 2.8vw 4vh;
+  overflow: hidden;
 }
 
 .screen-shell {
   width: 100%;
   max-width: 1380px;
+  height: 100%;
   margin: 0 auto;
   border: 2px solid var(--line);
   background: #f8f6ee;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .gov-bar {
