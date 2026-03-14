@@ -103,11 +103,12 @@ function persistState() {
   }
 }
 
-function hardReset() {
+function hardReset(nextScreen = "intro") {
   clearTimers();
   const authenticated = Boolean(state.authenticated);
   const fresh = makeInitialState();
   fresh.authenticated = authenticated;
+  fresh.screen = nextScreen;
   fresh.requestSerial = (state.requestSerial || 0) + 1;
   Object.keys(state).forEach((key) => delete state[key]);
   Object.assign(state, fresh);
@@ -116,7 +117,7 @@ function hardReset() {
 
 async function resetExperience() {
   const previousSessionId = state.sessionId;
-  hardReset();
+  hardReset("noPath");
   render();
 
   try {
