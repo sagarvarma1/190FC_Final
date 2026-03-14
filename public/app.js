@@ -111,7 +111,7 @@ function renderIntro() {
       <div class="type-box">
         <p id="typedCopy" class="typed-copy"></p>
       </div>
-      <div class="actions" id="introActions" style="visibility: hidden;">
+      <div class="actions" id="introActions">
         <button id="yesBtn" class="btn-primary">Yes, Continue</button>
         <button id="noBtn" class="btn-danger">No</button>
       </div>
@@ -126,28 +126,7 @@ function renderIntro() {
   noBtn.addEventListener("click", () => setScreen("noPath"));
 
   const typedCopy = document.getElementById("typedCopy");
-  const introActions = document.getElementById("introActions");
-
-  if (!state.introStarted) {
-    state.introStarted = true;
-    state.introDone = false;
-    state.introIndex = 0;
-
-    state.typeTimer = setInterval(() => {
-      state.introIndex += 2;
-      typedCopy.textContent = INTRO_COPY.slice(0, state.introIndex);
-
-      if (state.introIndex >= INTRO_COPY.length) {
-        clearInterval(state.typeTimer);
-        state.typeTimer = null;
-        state.introDone = true;
-        introActions.style.visibility = "visible";
-      }
-    }, 18);
-  } else {
-    typedCopy.textContent = INTRO_COPY;
-    introActions.style.visibility = "visible";
-  }
+  typedCopy.textContent = INTRO_COPY;
 }
 
 function renderNoPath() {
