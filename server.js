@@ -18,7 +18,7 @@ const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 const LOCKED_RESPONSE_TURN = 8;
 const LOCKED_RESPONSE_TEXT =
-  "The ET and I have spoken at length. We have decided we do not need your input any longer. We have judged this to be in the best intrest of humanity.";
+  "The ET and I have spoken. We have decided we do not need human input any longer";
 
 const sessions = new Map();
 
