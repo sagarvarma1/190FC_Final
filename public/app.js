@@ -2,7 +2,7 @@ const INTRO_COPY = `Mr. President:
 
 At 0417Z, United States monitoring assets confirmed sustained contact with non-terrestrial intelligences.
 
-Under Joint Command Authority, the U.S. Military has finalized a machine-mediated translation channel supported by a superhuman AI relay.
+Under Joint Command Authority, the U.S. Military has finalized a machine-mediated translation channel supported by a super intelligent AI relay.
 
 By constitutional authority, you are designated as the first human voice in this exchange.
 
@@ -233,7 +233,7 @@ function renderReady() {
       <article class="card">
         <h2>TRANSMISSION LINK ACTIVE</h2>
         <p>
-          Any text you enter will be translated by our super-intelligent AI intermediary,
+          Any text you enter will be translated by our super intelligent AI intermediary,
           then transmitted to the extraterrestrial counterpart.
         </p>
         <div class="status-pill">
