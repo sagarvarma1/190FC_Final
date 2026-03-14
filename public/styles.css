@@ -1,0 +1,344 @@
+:root {
+  --bg: #000000;
+  --text: #ffffff;
+  --muted: #cfcfcf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: clamp(20px, 1.7vw, 30px);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+#app {
+  min-height: 100vh;
+  padding: 4vh 4vw 5vh;
+}
+
+.screen-shell {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+.gov-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 2.2rem;
+}
+
+.gov-domain {
+  text-transform: uppercase;
+  font-size: clamp(18px, 1.6vw, 30px);
+  letter-spacing: 0.08em;
+}
+
+.flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-size: clamp(14px, 1.3vw, 24px);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.content {
+  padding: 0;
+}
+
+.confidential {
+  margin: 0 0 1.6rem;
+  font-size: clamp(54px, 7.8vw, 140px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.type-box,
+.card,
+.chat-log,
+.bubble,
+.status-pill {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+.type-box {
+  min-height: 0;
+}
+
+.typed-copy {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: clamp(30px, 2.55vw, 52px);
+  max-width: 58ch;
+}
+
+.actions {
+  margin-top: 1.7rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+button,
+.btn {
+  border: none;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  color: var(--text);
+  font: inherit;
+  font-size: clamp(28px, 2.2vw, 44px);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+button:hover,
+.btn:hover {
+  opacity: 0.72;
+}
+
+.btn-danger,
+.btn-primary {
+  color: var(--text);
+}
+
+.small {
+  color: var(--muted);
+  font-size: clamp(16px, 1.2vw, 24px);
+  margin-top: 1rem;
+}
+
+.no-screen {
+  min-height: 66vh;
+  display: flex;
+  align-items: center;
+}
+
+.no-screen p {
+  max-width: 46ch;
+  margin: 0;
+  font-size: clamp(30px, 2.4vw, 50px);
+}
+
+.brief-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.card h2,
+.card h3,
+.loader-title {
+  margin: 0 0 1rem;
+  font-size: clamp(40px, 3.6vw, 72px);
+  font-weight: normal;
+}
+
+.card p,
+.card li,
+.progress-meta,
+.warning {
+  margin-top: 0;
+  font-size: clamp(26px, 2.1vw, 40px);
+  line-height: 1.55;
+}
+
+.card ul {
+  margin: 0 0 0 1.2em;
+}
+
+.loader-wrap {
+  max-width: 980px;
+}
+
+.progress-track {
+  height: 3px;
+  background: #ffffff33;
+  margin-top: 1.2rem;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #fff;
+  transition: width 0.2s linear;
+}
+
+.progress-meta {
+  margin-top: 0.7rem;
+  color: var(--muted);
+}
+
+.ready-actions {
+  margin-top: 1.5rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 0.8rem;
+  font-size: clamp(24px, 1.9vw, 36px);
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.chat-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 76vh;
+}
+
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.msg {
+  margin: 0 0 1.2rem;
+}
+
+.bubble {
+  font-size: clamp(25px, 2vw, 38px);
+  white-space: pre-wrap;
+}
+
+.msg.user .bubble::before {
+  content: "> YOU: ";
+}
+
+.msg.assistant .bubble::before {
+  content: "ALIEN: ";
+}
+
+.msg.system .bubble::before {
+  content: "SYSTEM: ";
+}
+
+.msg-meta {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: clamp(16px, 1.2vw, 24px);
+}
+
+.composer {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.composer::before {
+  content: ">";
+  font-size: clamp(28px, 2.2vw, 42px);
+}
+
+.composer input {
+  flex: 1;
+  border: none;
+  border-bottom: 2px solid #ffffff;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 0.2rem 0;
+  font: inherit;
+  font-size: clamp(28px, 2.2vw, 42px);
+}
+
+.composer input:focus {
+  outline: none;
+}
+
+.trace {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: clamp(20px, 1.7vw, 30px);
+}
+
+.trace th,
+.trace td {
+  border: none;
+  text-align: left;
+  vertical-align: top;
+  padding: 0.2rem 1rem 0.6rem 0;
+}
+
+.trace th {
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+.warning {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 1020px) {
+  body {
+    font-size: clamp(18px, 2.8vw, 30px);
+  }
+
+  .brief-grid {
+    grid-template-columns: 1fr;
+    gap: 1.7rem;
+  }
+
+  .typed-copy,
+  .card p,
+  .card li,
+  .bubble,
+  .composer input,
+  button,
+  .btn {
+    font-size: clamp(24px, 5vw, 34px);
+  }
+
+  .confidential {
+    font-size: clamp(44px, 13vw, 84px);
+  }
+
+  .card h2,
+  .card h3,
+  .loader-title {
+    font-size: clamp(34px, 8vw, 56px);
+  }
+
+  .chat-layout {
+    min-height: 72vh;
+  }
+
+  .composer {
+    flex-wrap: wrap;
+  }
+
+  .composer input {
+    width: 100%;
+  }
+}

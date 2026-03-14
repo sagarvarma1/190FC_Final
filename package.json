@@ -1,0 +1,9 @@
+{
+  "name": "alien-first-contact-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive first-contact demo for RELG 190FC Option 3",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
