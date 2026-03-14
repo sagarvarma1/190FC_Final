@@ -30,6 +30,63 @@ body {
   overflow: hidden;
 }
 
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 2vw, 28px);
+}
+
+.auth-card {
+  width: min(680px, 100%);
+  border: 2px solid var(--line);
+  background: #f8f6ee;
+  padding: clamp(18px, 2.2vw, 32px);
+}
+
+.auth-card h1 {
+  margin: 0 0 0.8rem;
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: clamp(28px, 2.8vw, 46px);
+}
+
+.auth-card p {
+  margin: 0 0 1rem;
+}
+
+.auth-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.auth-form input {
+  flex: 1;
+  border: none;
+  border-bottom: 2px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  padding: 0.35rem 0;
+  font: inherit;
+}
+
+.auth-form input:focus {
+  outline: none;
+}
+
+.auth-error {
+  min-height: 1.2em;
+  margin-top: 0.8rem;
+  color: var(--accent);
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+  font-size: clamp(12px, 0.9vw, 15px);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .screen-shell {
   position: relative;
   width: 100%;
@@ -334,7 +391,7 @@ button:hover,
 }
 
 .msg.assistant .bubble::before {
-  content: "ALIEN: ";
+  content: "ET: ";
 }
 
 .msg.ai .bubble::before {

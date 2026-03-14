@@ -12,6 +12,7 @@ const CONNECT_DURATION_MS = 60_000;
 const LOCKED_CHAT_TURN = 8;
 const LOCKED_CHAT_MESSAGE =
   "The ET and I have spoken. We have decided we do not need human input any longer.";
+const LOGIN_PASSWORD = "earring";
 const PERSISTENCE_KEY = "first-contact-demo-state-v1";
 
 const app = document.getElementById("app");
@@ -31,6 +32,7 @@ render();
 
 function makeInitialState() {
   return {
+    authenticated: false,
     screen: "intro",
     introStarted: false,
     introDone: false,
@@ -61,6 +63,7 @@ function loadPersistedState() {
 
     return {
       ...initial,
+      authenticated: Boolean(parsed.authenticated),
       screen,
       introStarted: Boolean(parsed.introStarted),
       introDone: Boolean(parsed.introDone),
@@ -84,6 +87,7 @@ function loadPersistedState() {
 function persistState() {
   try {
     const snapshot = {
+      authenticated: Boolean(state.authenticated),
       screen: state.screen,
       introStarted: state.introStarted,
       introDone: state.introDone,
@@ -101,7 +105,9 @@ function persistState() {
 
 function hardReset() {
   clearTimers();
+  const authenticated = Boolean(state.authenticated);
   const fresh = makeInitialState();
+  fresh.authenticated = authenticated;
   fresh.requestSerial = (state.requestSerial || 0) + 1;
   Object.keys(state).forEach((key) => delete state[key]);
   Object.assign(state, fresh);
@@ -163,6 +169,12 @@ function shell(innerHtml) {
 }
 
 function render() {
+  if (!state.authenticated) {
+    renderAuth();
+    persistState();
+    return;
+  }
+
   switch (state.screen) {
     case "intro":
       renderIntro();
@@ -188,6 +200,43 @@ function render() {
       break;
   }
   persistState();
+}
+
+function renderAuth() {
+  app.innerHTML = `
+    <main class="auth-screen">
+      <section class="auth-card">
+        <h1>AUTHORIZED ACCESS</h1>
+        <p>Enter presidential passphrase to continue.</p>
+        <form id="authForm" class="auth-form">
+          <input id="authInput" name="authInput" type="password" autocomplete="current-password" placeholder="Passphrase" />
+          <button type="submit" class="btn-primary">LOGIN</button>
+        </form>
+        <p id="authError" class="auth-error" aria-live="polite"></p>
+      </section>
+    </main>
+  `;
+
+  const form = document.getElementById("authForm");
+  const input = document.getElementById("authInput");
+  const error = document.getElementById("authError");
+
+  input.focus();
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const attempt = input.value.trim();
+
+    if (attempt !== LOGIN_PASSWORD) {
+      error.textContent = "Invalid passphrase.";
+      input.value = "";
+      input.focus();
+      return;
+    }
+
+    state.authenticated = true;
+    render();
+  });
 }
 
 function renderIntro() {
@@ -325,15 +374,12 @@ function renderConnecting() {
         </div>
         <p id="progressMeta" class="progress-meta">0%</p>
         <div class="actions" style="justify-content:center; margin-top:20px;">
-          <button id="bypassBtn" class="btn-primary" type="button">BYPASS</button>
           <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
         <p class="small">Standard protocol duration: approximately 1 minute.</p>
       </div>
     </section>
   `);
-
-  document.getElementById("bypassBtn").addEventListener("click", () => setScreen("ready"));
 
   const progressFill = document.getElementById("progressFill");
   const progressMeta = document.getElementById("progressMeta");
