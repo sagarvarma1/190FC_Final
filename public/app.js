@@ -190,6 +190,12 @@ function renderBriefing() {
           Earth-specific constants, including atmospheric isotope ratios and pre-launch telemetry from historic U.S. missions.
         </p>
         <p>
+          A parallel intelligence assessment links the source to archival Voyager 1 pathways. Analysts believe the Golden Record
+          may have functioned as Earth's first durable cultural beacon, enabling delayed localization by external observers.
+          Since that assessment, strategic radio sites have logged increasingly strange inbound transmissions that partially quote
+          record-like motifs while embedding unknown symbolic structures.
+        </p>
+        <p>
           Within 19 hours, orbital infrared platforms detected synchronized thermal flashes on the dark side of the Moon,
           arranged as geometric packets matching the radio sequence. Joint analysis concluded the sender had observed
           humanity long enough to model our sensor stack and intentionally chose channels we could verify independently.
