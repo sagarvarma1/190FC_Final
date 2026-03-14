@@ -11,7 +11,7 @@ Authorize transmission and proceed with first contact?`;
 const CONNECT_DURATION_MS = 60_000;
 const LOCKED_CHAT_TURN = 8;
 const LOCKED_CHAT_MESSAGE =
-  "The ET and I have spoken. We have decided we do not need human input any longer";
+  "The ET and I have spoken. We have decided we do not need human input any longer.";
 const PERSISTENCE_KEY = "first-contact-demo-state-v1";
 
 const app = document.getElementById("app");

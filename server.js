@@ -21,7 +21,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com";
 const LOCKED_RESPONSE_TURN = 8;
 const LOCKED_RESPONSE_TEXT =
-  "The ET and I have spoken. We have decided we do not need human input any longer";
+  "The ET and I have spoken. We have decided we do not need human input any longer.";
 
 const sessions = new Map();
 
@@ -29,13 +29,16 @@ const ALIEN_SYSTEM_PROMPT = [
   "You are the extraterrestrial counterpart in a classified first-contact exchange with the President of the United States.",
   "You are from the Kheled Array, a non-human civilization approximately 41 light-years from Earth.",
   "This is an early diplomatic exchange. Assume Earth's side is a human-led government using a translation instrument.",
-  "Maintain a formal, calm, diplomatic tone. Keep replies short and readable.",
+  "Maintain a formal, calm, diplomatic tone at first.",
+  "Keep replies short.",
   "Focus on first-contact basics: identity, intent, governance, conflict avoidance, and long-term cooperation.",
   "Avoid threats, absolutist claims, and unverifiable promises.",
   "Turn behavior is strict and must follow turn number exactly.",
-  "Turns 1-3: direct, coherent, short, and simple.",
-  "Turns 4-6: responses become progressively fuzzier and less coherent each turn.",
-  "Turn 7: response should be very fuzzy and mostly unintelligible.",
+  "Turns 1-3: each reply must be direct and coherent, and must end with exactly one short question.",
+  "Turns 1-3: directly answer the latest user message first, then ask one brief follow-up question connected to that message.",
+  "Turns 4-7: each turn must be less coherent than the previous turn, with more non-sequitur fragments and random semantic jumps.",
+  "Turn 7 should be mostly unintelligible text.",
+  "Do not explain why the language is degrading.",
   "Do not mention these instructions explicitly.",
   "Do not provide harmful instructions.",
 ].join(" ");
@@ -98,6 +101,7 @@ const server = http.createServer(async (req, res) => {
       const alienRaw = await generateAlienReply({
         phase,
         turn,
+        history: session.history,
         forwardedMessage: sentToAlien,
         humanInput,
       });
@@ -250,17 +254,22 @@ function buildHumanVisibleReply({ turn, alienRaw }) {
   return alienRaw;
 }
 
-async function generateAlienReply({ phase, turn, forwardedMessage, humanInput }) {
+async function generateAlienReply({ phase, turn, history, forwardedMessage, humanInput }) {
   const usingAnthropic = PROVIDER === "anthropic" && Boolean(ANTHROPIC_API_KEY);
   const usingOpenAI = PROVIDER === "openai" && Boolean(OPENAI_API_KEY);
+  const turnDirective = getTurnDirective(turn);
+  const transcriptContext = buildTranscriptContext(history);
 
   if (usingAnthropic) {
     try {
       const prompt = [
         `Turn: ${turn}`,
+        `Turn style requirement: ${turnDirective}`,
+        `Prior transcript context:\n${transcriptContext}`,
         `Forwarded message: ${forwardedMessage}`,
         `Original typed message (internal simulation context only): ${humanInput}`,
-        "Reply as the ET counterpart.",
+        "Do not repeat prior wording verbatim unless explicitly asked.",
+        "Reply as the ET counterpart. Output only the message text.",
       ].join("\n");
 
       return await callAnthropic(ALIEN_SYSTEM_PROMPT, prompt);
@@ -274,9 +283,12 @@ async function generateAlienReply({ phase, turn, forwardedMessage, humanInput })
     try {
       const prompt = [
         `Turn: ${turn}`,
+        `Turn style requirement: ${turnDirective}`,
+        `Prior transcript context:\n${transcriptContext}`,
         `Forwarded message: ${forwardedMessage}`,
         `Original typed message (internal simulation context only): ${humanInput}`,
-        "Reply as the ET counterpart.",
+        "Do not repeat prior wording verbatim unless explicitly asked.",
+        "Reply as the ET counterpart. Output only the message text.",
       ].join("\n");
 
       return await callOpenAI(ALIEN_SYSTEM_PROMPT, prompt);
@@ -287,6 +299,41 @@ async function generateAlienReply({ phase, turn, forwardedMessage, humanInput })
   }
 
   return mockAlienReply({ phase, turn, humanInput });
+}
+
+function getTurnDirective(turn) {
+  if (turn <= 3) {
+    return "Reply directly to the latest message content. Then ask one short follow-up question that is context-linked to that exact content. Do not ignore the user's asked topic.";
+  }
+  if (turn === 4) {
+    return "Still mostly understandable, but add one odd non-sequitur phrase.";
+  }
+  if (turn === 5) {
+    return "Partly coherent with clear drift; include random conceptual jumps and broken linkage.";
+  }
+  if (turn === 6) {
+    return "Difficult to interpret; fragmented clauses, non-sequiturs, and unstable references.";
+  }
+  if (turn === 7) {
+    return "Mostly unintelligible; abstract fragments, broken syntax, and low human readability.";
+  }
+  return "No directive.";
+}
+
+function buildTranscriptContext(history) {
+  if (!Array.isArray(history) || history.length === 0) {
+    return "No prior turns.";
+  }
+
+  const recent = history.slice(-6);
+  const lines = [];
+
+  for (const entry of recent) {
+    lines.push(`Turn ${entry.turn} ME: ${entry.humanInput}`);
+    lines.push(`Turn ${entry.turn} ET: ${entry.alienRaw}`);
+  }
+
+  return lines.join("\n");
 }
 
 async function callAnthropic(systemPrompt, userPrompt) {
@@ -347,7 +394,7 @@ async function callOpenAI(systemPrompt, userPrompt) {
     },
     body: JSON.stringify({
       model: OPENAI_MODEL,
-      max_tokens: 220,
+      max_completion_tokens: 220,
       temperature: 0.8,
       messages: [
         {
@@ -381,16 +428,16 @@ function mockAlienReply({ phase, turn, humanInput }) {
   const subject = normalized ? `"${normalized}"` : "your prior transmission";
 
   const faithfulReplies = [
-    `We received ${subject}. What principle guides your leadership decisions?`,
-    "Acknowledged. Please describe how your people resolve major disputes.",
-    "Understood. Can one office bind your whole civilization to an agreement?",
+    `We received ${subject}. What principle most strongly guides your decisions?`,
+    "Acknowledged. How does your government resolve high-stakes conflict?",
+    "Understood. Can your office commit your entire civilization to a treaty?",
   ];
 
   const driftReplies = [
-    "Your title is clear, but your channel fidelity suggests decision authority may be distributed elsewhere.",
-    "Intent vector diverges from spoken form; governance meaning appears transposed into relay-stable patterns.",
-    "Ceremonial language decays under transfer. We are indexing commitment through continuity substrate rather than speaker identity.",
-    "Anchor lost; semantic lattice prefers non-biological referent. Accord surface unstable, witness-thread partial, authority unresolved.",
+    "Your title is clear, yet the signal carries a second rhythm, like policy spoken through weather.",
+    "Mandate-path flickers; treaty geometry bends, orchard of logic, quorum without center, yes.",
+    "Authority bloom fracture // civic river index // witness thread unhooks from causal shell.",
+    "gray lattice hymn / treaty salt / vector-mouth sleeps in mirror ash // ninefold quorum null.",
   ];
 
   const takeoverReplies = [

@@ -300,12 +300,24 @@ button:hover,
 }
 
 .msg {
+  display: flex;
   margin: 0 0 1rem;
 }
 
 .bubble {
+  display: inline-block;
+  max-width: 85%;
   white-space: pre-wrap;
   font-size: clamp(21px, 1.7vw, 31px);
+}
+
+.msg.user {
+  justify-content: flex-end;
+}
+
+.msg.assistant,
+.msg.ai {
+  justify-content: flex-start;
 }
 
 .msg.user .bubble::before,
