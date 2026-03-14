@@ -31,6 +31,7 @@ body {
 }
 
 .screen-shell {
+  position: relative;
   width: 100%;
   max-width: 1380px;
   height: 100%;
@@ -384,7 +385,7 @@ button:hover,
   #app {
     padding: 1.6vh 1.8vw 3vh;
   }
-
+  
   .gov-bar,
   .class-line,
   .content {

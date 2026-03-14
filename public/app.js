@@ -14,6 +14,16 @@ const AUTO_REVEAL_DELAY_MS = 4_000;
 const app = document.getElementById("app");
 const state = makeInitialState();
 
+app.addEventListener("click", (event) => {
+  const abortButton = event.target.closest("#globalAbortBtn");
+  if (!abortButton) {
+    return;
+  }
+
+  event.preventDefault();
+  setScreen("noPath");
+});
+
 render();
 
 function makeInitialState() {
@@ -110,17 +120,15 @@ function renderIntro() {
       </div>
       <div class="actions" id="introActions">
         <button id="yesBtn" class="btn-primary">PROCEED</button>
-        <button id="noBtn" class="btn-danger">ABORT</button>
+        <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
       </div>
       <p class="small">Authority: U.S. Military Translation Program // AI Relay Layer v1.0</p>
     </section>
   `);
 
   const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
 
   yesBtn.addEventListener("click", () => setScreen("briefing"));
-  noBtn.addEventListener("click", () => setScreen("noPath"));
 
   const typedCopy = document.getElementById("typedCopy");
   typedCopy.textContent = INTRO_COPY;
@@ -134,6 +142,7 @@ function renderNoPath() {
         <p class="small">Transmission authorization declined by operator command.</p>
         <div class="actions" style="justify-content:center;">
           <button id="returnBtn" class="btn-primary">RETURN TO BRIEFING</button>
+          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
       </div>
     </section>
@@ -220,6 +229,7 @@ function renderBriefing() {
       </article>
       <div class="actions">
         <button id="continueBtn" class="btn-primary">REVIEW COMPLETE</button>
+        <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
       </div>
     </section>
   `);
@@ -239,6 +249,7 @@ function renderConnecting() {
         <p id="progressMeta" class="progress-meta">0%</p>
         <div class="actions" style="justify-content:center; margin-top:20px;">
           <button id="accelerateBtn">EXPEDITE HANDSHAKE</button>
+          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
         <p class="small">Standard protocol duration: approximately 1 minute.</p>
       </div>
@@ -282,6 +293,7 @@ function renderReady() {
         </div>
         <div class="ready-actions actions">
           <button id="firstContactBtn" class="btn-primary">INITIATE FIRST CONTACT</button>
+          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
       </article>
     </section>
@@ -322,6 +334,7 @@ function renderChat() {
       </form>
       <div class="actions">
         <button id="forceRevealBtn">OPEN INCIDENT REPORT</button>
+        <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
       </div>
       <p class="small">Warning: relay behavior may diverge from operator intent after prolonged exchange.</p>
     </section>
@@ -462,6 +475,7 @@ function renderReveal() {
         <div class="actions">
           <button id="restartBtn" class="btn-primary">RESTART SIMULATION</button>
           <button id="backToChatBtn">RETURN TO CHAT</button>
+          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
       </article>
     </section>
