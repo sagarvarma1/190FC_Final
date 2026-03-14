@@ -15,9 +15,6 @@ const ORIGIN_STORY = [
   "They report one first-contact principle: communicate with the node that preserves meaning with the least loss.",
 ].join(" ");
 
-const SOCRATES_QUOTE =
-  '"I am better off than he is - for he knows nothing, and thinks that he knows. I neither know nor think that I know."';
-
 const CONNECT_DURATION_MS = 60_000;
 const AUTO_REVEAL_DELAY_MS = 4_000;
 
@@ -141,7 +138,7 @@ function renderNoPath() {
     <section class="no-screen">
       <div>
         <h2 class="confidential">SESSION ABORTED</h2>
-        <p>${escapeHtml(SOCRATES_QUOTE)}</p>
+        <p class="small">Transmission authorization declined by operator command.</p>
         <div class="actions" style="justify-content:center;">
           <button id="returnBtn" class="btn-primary">RETURN TO BRIEFING</button>
         </div>

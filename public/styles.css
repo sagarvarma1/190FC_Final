@@ -163,7 +163,7 @@ button:hover,
   text-align: center;
 }
 
-.no-screen p {
+.no-screen p:not(.small) {
   max-width: 46ch;
   margin: 0;
   font-size: clamp(25px, 2vw, 38px);
