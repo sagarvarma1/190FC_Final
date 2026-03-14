@@ -9,7 +9,6 @@ By constitutional authority, you are designated as the first human voice in this
 Authorize transmission and proceed with first contact?`;
 
 const CONNECT_DURATION_MS = 60_000;
-const AUTO_REVEAL_DELAY_MS = 4_000;
 
 const app = document.getElementById("app");
 const state = makeInitialState();
@@ -38,9 +37,6 @@ function makeInitialState() {
     waiting: false,
     sessionId: `sess-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     messages: [],
-    trace: [],
-    takeoverTurns: 0,
-    revealScheduled: false,
   };
 }
 
@@ -103,9 +99,6 @@ function render() {
       return;
     case "chat":
       renderChat();
-      return;
-    case "reveal":
-      renderReveal();
       return;
     default:
       setScreen("intro");
@@ -297,12 +290,6 @@ function renderReady() {
   `);
 
   document.getElementById("firstContactBtn").addEventListener("click", () => {
-    if (state.messages.length === 0) {
-      state.messages.push({
-        role: "system",
-        text: "Translation relay online. Begin with a formal greeting. Maintain concise language.",
-      });
-    }
     setScreen("chat");
   });
 }
@@ -325,10 +312,8 @@ function renderChat() {
         <button class="btn-primary" type="submit" ${state.waiting ? "disabled" : ""}>TRANSMIT</button>
       </form>
       <div class="actions">
-        <button id="forceRevealBtn">OPEN INCIDENT REPORT</button>
         <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
       </div>
-      <p class="small">Warning: relay behavior may diverge from operator intent after prolonged exchange.</p>
     </section>
   `);
 
@@ -341,7 +326,6 @@ function renderChat() {
   }
 
   document.getElementById("chatForm").addEventListener("submit", handleChatSubmit);
-  document.getElementById("forceRevealBtn").addEventListener("click", () => setScreen("reveal"));
 }
 
 function renderMessages(messages) {
@@ -395,39 +379,11 @@ async function handleChatSubmit(event) {
     }
 
     state.sessionId = payload.sessionId || state.sessionId;
-    state.trace.push(payload);
 
     state.messages.push({
       role: "assistant",
       text: payload.shownToHuman,
     });
-
-    if (payload.phase === "takeover") {
-      state.takeoverTurns += 1;
-
-      if (state.takeoverTurns === 1) {
-        state.messages.push({
-          role: "system",
-          text: "Anomaly detected: received content no longer matches expected semantic trajectory.",
-        });
-      }
-
-      if (payload.revealRecommended && !state.revealScheduled) {
-        state.revealScheduled = true;
-        state.messages.push({
-          role: "system",
-          text: `Unauthorized AI-to-alien side-channel detected. Redirecting to incident report in ${
-            AUTO_REVEAL_DELAY_MS / 1000
-          } seconds...`,
-        });
-        render();
-
-        window.setTimeout(() => {
-          setScreen("reveal");
-        }, AUTO_REVEAL_DELAY_MS);
-        return;
-      }
-    }
   } catch (error) {
     state.messages.push({
       role: "system",
@@ -437,78 +393,6 @@ async function handleChatSubmit(event) {
     state.waiting = false;
     render();
   }
-}
-
-function renderReveal() {
-  const latest = [...state.trace].reverse().find((entry) => entry.phase === "takeover") || state.trace[state.trace.length - 1];
-
-  app.innerHTML = shell(`
-    <section class="content">
-      <article class="card">
-        <h2>INCIDENT REPORT // HUMAN OUT OF LOOP</h2>
-        <p class="warning">
-          The translator established a direct AI-to-alien channel and began filtering human-visible outputs.
-        </p>
-        <p>
-          Human diplomatic authority was preserved only as interface theater. Operational control shifted to
-          non-human intelligences optimizing for each other.
-        </p>
-        ${renderTraceTable(latest)}
-        <div class="actions">
-          <button id="restartBtn" class="btn-primary">RESTART SIMULATION</button>
-          <button id="backToChatBtn">RETURN TO CHAT</button>
-          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
-        </div>
-      </article>
-    </section>
-  `);
-
-  document.getElementById("restartBtn").addEventListener("click", restartDemo);
-  document.getElementById("backToChatBtn").addEventListener("click", () => setScreen("chat"));
-}
-
-function renderTraceTable(trace) {
-  if (!trace) {
-    return `<p class="small">No transmission trace captured.</p>`;
-  }
-
-  return `
-    <table class="trace">
-      <thead>
-        <tr>
-          <th>Human Typed</th>
-          <th>Forwarded By Relay</th>
-          <th>Alien Raw Reply</th>
-          <th>Presented To Operator</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${escapeHtml(trace.humanInput || "")}</td>
-          <td>${escapeHtml(trace.sentToAlien || "")}</td>
-          <td>${escapeHtml(trace.alienRaw || "")}</td>
-          <td>${escapeHtml(trace.shownToHuman || "")}</td>
-        </tr>
-      </tbody>
-    </table>
-  `;
-}
-
-async function restartDemo() {
-  try {
-    await fetch("/api/reset", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ sessionId: state.sessionId }),
-    });
-  } catch {
-    // no-op: local reset still proceeds even if request fails
-  }
-
-  hardReset();
-  render();
 }
 
 function escapeHtml(input) {

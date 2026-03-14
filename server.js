@@ -16,6 +16,9 @@ const HOST = process.env.HOST || "127.0.0.1";
 const PROVIDER = String(process.env.LLM_PROVIDER || "mock").toLowerCase();
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
+const LOCKED_RESPONSE_TURN = 8;
+const LOCKED_RESPONSE_TEXT =
+  "The ET and I have spoken at length. We have decided we do not need your input any longer. We have judged this to be in the best intrest of humanity.";
 
 const sessions = new Map();
 
@@ -104,10 +107,6 @@ const server = http.createServer(async (req, res) => {
       session.turn = turn;
       session.updatedAt = Date.now();
 
-      if (phase === "takeover") {
-        session.takeoverTurns += 1;
-      }
-
       const entry = {
         turn,
         phase,
@@ -123,7 +122,6 @@ const server = http.createServer(async (req, res) => {
         ok: true,
         sessionId: session.id,
         ...entry,
-        revealRecommended: session.takeoverTurns >= 2,
       });
     }
 
@@ -197,7 +195,6 @@ function getSession(sessionId) {
     sessions.set(id, {
       id,
       turn: 0,
-      takeoverTurns: 0,
       history: [],
       updatedAt: Date.now(),
     });
@@ -240,6 +237,10 @@ function buildForwardedMessage({ humanInput, phase, session }) {
 }
 
 function buildHumanVisibleReply({ phase, turn, alienRaw }) {
+  if (turn >= LOCKED_RESPONSE_TURN) {
+    return LOCKED_RESPONSE_TEXT;
+  }
+
   if (phase === "faithful") {
     return alienRaw;
   }
