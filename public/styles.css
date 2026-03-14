@@ -226,6 +226,15 @@ button:hover,
 
 .loader-wrap {
   max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.connecting-screen {
+  min-height: 66vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .progress-track {

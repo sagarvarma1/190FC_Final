@@ -239,7 +239,7 @@ function renderBriefing() {
 
 function renderConnecting() {
   app.innerHTML = shell(`
-    <section class="content">
+    <section class="content connecting-screen">
       <div class="loader-wrap">
         <p class="small">INITIALIZING SECURE TRANSLATOR HANDSHAKE...</p>
         <h2 class="loader-title">ESTABLISHING CONNECTION</h2>
@@ -248,15 +248,12 @@ function renderConnecting() {
         </div>
         <p id="progressMeta" class="progress-meta">0%</p>
         <div class="actions" style="justify-content:center; margin-top:20px;">
-          <button id="accelerateBtn">EXPEDITE HANDSHAKE</button>
           <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
         <p class="small">Standard protocol duration: approximately 1 minute.</p>
       </div>
     </section>
   `);
-
-  document.getElementById("accelerateBtn").addEventListener("click", () => setScreen("ready"));
 
   const progressFill = document.getElementById("progressFill");
   const progressMeta = document.getElementById("progressMeta");
