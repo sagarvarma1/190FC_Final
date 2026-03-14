@@ -24,7 +24,7 @@ app.addEventListener("click", (event) => {
   }
 
   event.preventDefault();
-  setScreen("noPath");
+  void resetExperience();
 });
 
 render();
@@ -42,6 +42,7 @@ function makeInitialState() {
     sessionId: `sess-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     messages: [],
     userMessageCount: 0,
+    requestSerial: 0,
   };
 }
 
@@ -70,6 +71,7 @@ function loadPersistedState() {
         ? parsed.messages.filter((msg) => msg && typeof msg.text === "string")
         : [],
       userMessageCount: Number.isFinite(parsed.userMessageCount) ? parsed.userMessageCount : 0,
+      requestSerial: 0,
       waiting: false,
       typeTimer: null,
       connectTimer: null,
@@ -100,9 +102,28 @@ function persistState() {
 function hardReset() {
   clearTimers();
   const fresh = makeInitialState();
+  fresh.requestSerial = (state.requestSerial || 0) + 1;
   Object.keys(state).forEach((key) => delete state[key]);
   Object.assign(state, fresh);
   persistState();
+}
+
+async function resetExperience() {
+  const previousSessionId = state.sessionId;
+  hardReset();
+  render();
+
+  try {
+    await fetch("/api/reset", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ sessionId: previousSessionId }),
+    });
+  } catch {
+    // no-op if reset call fails
+  }
 }
 
 function setScreen(nextScreen) {
@@ -439,6 +460,7 @@ async function handleChatSubmit(event) {
 
   state.waiting = true;
   render();
+  const requestSerial = ++state.requestSerial;
 
   try {
     const response = await fetch("/api/chat", {
@@ -458,6 +480,10 @@ async function handleChatSubmit(event) {
       throw new Error(payload.error || "Chat request failed.");
     }
 
+    if (requestSerial !== state.requestSerial) {
+      return;
+    }
+
     state.sessionId = payload.sessionId || state.sessionId;
     const assistantRole = payload.shownToHuman === LOCKED_CHAT_MESSAGE ? "ai" : "assistant";
 
@@ -466,13 +492,19 @@ async function handleChatSubmit(event) {
       text: payload.shownToHuman,
     });
   } catch (error) {
+    if (requestSerial !== state.requestSerial) {
+      return;
+    }
+
     state.messages.push({
       role: "system",
       text: `Error: ${error.message}`,
     });
   } finally {
-    state.waiting = false;
-    render();
+    if (requestSerial === state.requestSerial) {
+      state.waiting = false;
+      render();
+    }
   }
 }
 
