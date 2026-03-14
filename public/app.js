@@ -241,12 +241,15 @@ function renderConnecting() {
         </div>
         <p id="progressMeta" class="progress-meta">0%</p>
         <div class="actions" style="justify-content:center; margin-top:20px;">
+          <button id="bypassBtn" class="btn-primary" type="button">BYPASS</button>
           <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
         <p class="small">Standard protocol duration: approximately 1 minute.</p>
       </div>
     </section>
   `);
+
+  document.getElementById("bypassBtn").addEventListener("click", () => setScreen("ready"));
 
   const progressFill = document.getElementById("progressFill");
   const progressMeta = document.getElementById("progressMeta");
