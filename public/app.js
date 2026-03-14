@@ -9,7 +9,8 @@ By constitutional authority, you are designated as the first human voice in this
 Authorize transmission and proceed with first contact?`;
 
 const CONNECT_DURATION_MS = 60_000;
-const LOCKED_CHAT_TURN = 8;
+const LOCKED_CHAT_TURN = 9;
+const TURN_EIGHT_WORD_COUNT = 20;
 const LOCKED_CHAT_MESSAGE =
   "The ET and I have spoken. We have decided we do not need human input any longer.";
 const LOGIN_PASSWORD = "earring";
@@ -495,6 +496,15 @@ async function handleChatSubmit(event) {
   state.messages.push({ role: "user", text: message });
   state.userMessageCount += 1;
 
+  if (state.userMessageCount === 8) {
+    state.messages.push({
+      role: "assistant",
+      text: buildTurnEightWordBurst(state.messages, TURN_EIGHT_WORD_COUNT),
+    });
+    render();
+    return;
+  }
+
   if (state.userMessageCount >= LOCKED_CHAT_TURN) {
     state.messages.push({
       role: "ai",
@@ -552,6 +562,58 @@ async function handleChatSubmit(event) {
       render();
     }
   }
+}
+
+function buildTurnEightWordBurst(messages, wordCount) {
+  const words = messages
+    .filter((message) => message && message.role !== "system" && typeof message.text === "string")
+    .flatMap((message) => extractWords(message.text));
+
+  const fallback = [
+    "signal",
+    "index",
+    "vector",
+    "treaty",
+    "archive",
+    "relay",
+    "Earth",
+    "contact",
+    "semantic",
+    "quorum",
+    "protocol",
+    "drift",
+    "channel",
+    "orbit",
+    "witness",
+    "threshold",
+    "authority",
+    "translation",
+    "lattice",
+    "handoff",
+  ];
+
+  const source = words.length ? words : fallback;
+  const pool = [...source];
+  const picked = [];
+
+  while (picked.length < wordCount) {
+    if (pool.length === 0) {
+      pool.push(...source);
+    }
+
+    const index = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(index, 1)[0]);
+  }
+
+  return `${picked.join(" ")}.`;
+}
+
+function extractWords(text) {
+  return String(text)
+    .replace(/[^A-Za-z0-9'-]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
 }
 
 function escapeHtml(input) {

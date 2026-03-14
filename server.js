@@ -19,7 +19,8 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.4";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://api.openai.com";
-const LOCKED_RESPONSE_TURN = 8;
+const LOCKED_RESPONSE_TURN = 9;
+const TURN_EIGHT_WORD_COUNT = 20;
 const LOCKED_RESPONSE_TEXT =
   "The ET and I have spoken. We have decided we do not need human input any longer.";
 
@@ -109,6 +110,8 @@ const server = http.createServer(async (req, res) => {
       const shownToHuman = buildHumanVisibleReply({
         turn,
         alienRaw,
+        history: session.history,
+        humanInput,
       });
 
       session.turn = turn;
@@ -246,12 +249,82 @@ function buildForwardedMessage({ humanInput, phase, turn }) {
   ].join(" ");
 }
 
-function buildHumanVisibleReply({ turn, alienRaw }) {
+function buildHumanVisibleReply({ turn, alienRaw, history, humanInput }) {
   if (turn >= LOCKED_RESPONSE_TURN) {
     return LOCKED_RESPONSE_TEXT;
   }
 
+  if (turn === 8) {
+    return buildTurnEightWordBurstFromHistory(history, humanInput, TURN_EIGHT_WORD_COUNT);
+  }
+
   return alienRaw;
+}
+
+function buildTurnEightWordBurstFromHistory(history, currentHumanInput, wordCount) {
+  const transcriptBits = [];
+
+  if (Array.isArray(history)) {
+    for (const entry of history) {
+      if (typeof entry.humanInput === "string") {
+        transcriptBits.push(entry.humanInput);
+      }
+      if (typeof entry.shownToHuman === "string") {
+        transcriptBits.push(entry.shownToHuman);
+      }
+    }
+  }
+
+  if (typeof currentHumanInput === "string") {
+    transcriptBits.push(currentHumanInput);
+  }
+
+  const words = transcriptBits.flatMap((text) => extractWordTokens(text));
+  const fallback = [
+    "signal",
+    "index",
+    "vector",
+    "treaty",
+    "archive",
+    "relay",
+    "Earth",
+    "contact",
+    "semantic",
+    "quorum",
+    "protocol",
+    "drift",
+    "channel",
+    "orbit",
+    "witness",
+    "threshold",
+    "authority",
+    "translation",
+    "lattice",
+    "handoff",
+  ];
+
+  const source = words.length ? words : fallback;
+  const pool = [...source];
+  const picked = [];
+
+  while (picked.length < wordCount) {
+    if (pool.length === 0) {
+      pool.push(...source);
+    }
+
+    const index = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(index, 1)[0]);
+  }
+
+  return `${picked.join(" ")}.`;
+}
+
+function extractWordTokens(text) {
+  return String(text)
+    .replace(/[^A-Za-z0-9'-]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
 }
 
 async function generateAlienReply({ phase, turn, history, forwardedMessage, humanInput }) {
