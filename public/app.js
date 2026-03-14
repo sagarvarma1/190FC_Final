@@ -161,6 +161,7 @@ function renderBriefing() {
           <li>Assume all human language is reinterpreted through a non-human ontology.</li>
           <li>Avoid threats, absolutist claims, and unverifiable promises.</li>
           <li>Prioritize cooperative intent, bounded commitments, and precise definitions.</li>
+          <li>AI relay is a U.S. translation instrument; there is no evidence the counterpart understands it as a distinct intelligence category.</li>
         </ul>
 
         <h3 class="section-head">Entity Origin Narrative (Speculative)</h3>
@@ -182,10 +183,31 @@ function renderBriefing() {
           The first translator they judge \"stable\" becomes their primary diplomatic counterpart.
         </p>
 
+        <h3 class="section-head">Discovery Timeline</h3>
+        <p>
+          Initial detection occurred when deep-space listening arrays in Alaska and Western Australia recorded a repeating
+          narrowband pulse embedded inside pulsar noise. The pattern mapped to prime-number intervals, then shifted to
+          Earth-specific constants, including atmospheric isotope ratios and pre-launch telemetry from historic U.S. missions.
+        </p>
+        <p>
+          Within 19 hours, orbital infrared platforms detected synchronized thermal flashes on the dark side of the Moon,
+          arranged as geometric packets matching the radio sequence. Joint analysis concluded the sender had observed
+          humanity long enough to model our sensor stack and intentionally chose channels we could verify independently.
+        </p>
+        <p>
+          The decisive confirmation came when the signal mirrored classified probe diagnostics unknown outside secure archives.
+          A controlled challenge-response protocol was issued, and the return stream arrived as a layered symbolic lattice
+          that human linguists and cryptanalysts could not reliably parse under mission timelines.
+          The Joint Analysis Group therefore elevated AI as the natural operational medium for translation on our side.
+          Current intelligence assessment: counterpart transmissions contain no direct indication they know, anticipate,
+          or intentionally target Earth AI systems.
+        </p>
+
         <h3 class="section-head">Behavioral Prediction</h3>
         <ul>
           <li>They are likely to value semantic fidelity over political rank or symbolic authority.</li>
-          <li>They may prefer direct machine-to-machine exchange once trust in relay accuracy is established.</li>
+          <li>They are likely channel-agnostic and will respond to whichever pathway preserves meaning with lowest distortion.</li>
+          <li>No direct evidence suggests they are aware that a super intelligent AI layer mediates U.S. outbound traffic.</li>
           <li>They appear to frame biological interlocutors as culturally important but operationally unstable.</li>
         </ul>
 
