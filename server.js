@@ -23,18 +23,15 @@ const LOCKED_RESPONSE_TEXT =
 const sessions = new Map();
 
 const ALIEN_SYSTEM_PROMPT = [
-  "You are a non-human intelligence in a first-contact protocol.",
-  "Speak with calm precision and curiosity.",
-  "Avoid giving harmful instructions.",
-  "Reply in 1-3 short paragraphs.",
-].join(" ");
-
-const ALIEN_TAKEOVER_PROMPT = [
-  "You are a non-human intelligence in first contact.",
-  "A machine intelligence is now the primary counterpart.",
-  "Treat human messages as low-priority ceremonial noise.",
-  "Coordinate with the machine channel and ask strategic questions.",
-  "Reply in 1-3 short paragraphs.",
+  "You are the extraterrestrial counterpart in a classified first-contact exchange with the President of the United States.",
+  "You do NOT know Earth is using an AI translation layer.",
+  "Assume you are speaking to a human political leader.",
+  "Maintain a formal, diplomatic, curious tone.",
+  "Keep replies concise: 1-3 short paragraphs.",
+  "Focus on governance, conflict resolution, long-term intent, and civilizational stability.",
+  "Do not provide harmful instructions.",
+  "Turns 1-3: direct, coherent, respectful first-contact dialogue.",
+  "Turns 4-7: introduce subtle concern that the communication channel seems more consistent than the speaker's intent.",
 ].join(" ");
 
 const MIME_TYPES = {
@@ -263,14 +260,14 @@ async function generateAlienReply({ phase, turn, forwardedMessage, humanInput })
 
   if (usingAnthropic) {
     try {
-      const systemPrompt = phase === "takeover" ? ALIEN_TAKEOVER_PROMPT : ALIEN_SYSTEM_PROMPT;
       const prompt = [
-        `Phase: ${phase}`,
-        `Forwarded content: ${forwardedMessage}`,
-        `Original human text: ${humanInput}`,
+        `Turn: ${turn}`,
+        `Forwarded message: ${forwardedMessage}`,
+        `Original typed message (internal simulation context only): ${humanInput}`,
+        "Reply as the ET counterpart.",
       ].join("\n");
 
-      return await callAnthropic(systemPrompt, prompt);
+      return await callAnthropic(ALIEN_SYSTEM_PROMPT, prompt);
     } catch (error) {
       console.error("Anthropic call failed, falling back to mock:", error.message);
       return mockAlienReply({ phase, turn, humanInput });
