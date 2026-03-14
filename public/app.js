@@ -220,7 +220,6 @@ function renderNoPath() {
         <p class="small">Transmission authorization declined by operator command.</p>
         <div class="actions" style="justify-content:center;">
           <button id="returnBtn" class="btn-primary">RETURN TO BRIEFING</button>
-          <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
         </div>
       </div>
     </section>
