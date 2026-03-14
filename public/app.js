@@ -12,9 +12,10 @@ const CONNECT_DURATION_MS = 60_000;
 const LOCKED_CHAT_TURN = 8;
 const LOCKED_CHAT_MESSAGE =
   "The ET and I have spoken. We have decided we do not need human input any longer";
+const PERSISTENCE_KEY = "first-contact-demo-state-v1";
 
 const app = document.getElementById("app");
-const state = makeInitialState();
+const state = loadPersistedState();
 
 app.addEventListener("click", (event) => {
   const abortButton = event.target.closest("#globalAbortBtn");
@@ -44,16 +45,72 @@ function makeInitialState() {
   };
 }
 
+function loadPersistedState() {
+  const initial = makeInitialState();
+
+  try {
+    const raw = localStorage.getItem(PERSISTENCE_KEY);
+    if (!raw) {
+      return initial;
+    }
+
+    const parsed = JSON.parse(raw);
+    const validScreens = new Set(["intro", "noPath", "briefing", "connecting", "ready", "chat"]);
+    const screen = validScreens.has(parsed.screen) ? parsed.screen : initial.screen;
+
+    return {
+      ...initial,
+      screen,
+      introStarted: Boolean(parsed.introStarted),
+      introDone: Boolean(parsed.introDone),
+      introIndex: Number.isFinite(parsed.introIndex) ? parsed.introIndex : 0,
+      connectStartMs: Number.isFinite(parsed.connectStartMs) ? parsed.connectStartMs : 0,
+      sessionId: typeof parsed.sessionId === "string" ? parsed.sessionId : initial.sessionId,
+      messages: Array.isArray(parsed.messages)
+        ? parsed.messages.filter((msg) => msg && typeof msg.text === "string")
+        : [],
+      userMessageCount: Number.isFinite(parsed.userMessageCount) ? parsed.userMessageCount : 0,
+      waiting: false,
+      typeTimer: null,
+      connectTimer: null,
+    };
+  } catch {
+    return initial;
+  }
+}
+
+function persistState() {
+  try {
+    const snapshot = {
+      screen: state.screen,
+      introStarted: state.introStarted,
+      introDone: state.introDone,
+      introIndex: state.introIndex,
+      connectStartMs: state.connectStartMs,
+      sessionId: state.sessionId,
+      messages: state.messages,
+      userMessageCount: state.userMessageCount,
+    };
+    localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(snapshot));
+  } catch {
+    // ignore storage failures
+  }
+}
+
 function hardReset() {
   clearTimers();
   const fresh = makeInitialState();
   Object.keys(state).forEach((key) => delete state[key]);
   Object.assign(state, fresh);
+  persistState();
 }
 
 function setScreen(nextScreen) {
   clearTimers();
   state.screen = nextScreen;
+  if (nextScreen !== "connecting") {
+    state.connectStartMs = 0;
+  }
   render();
 }
 
@@ -88,25 +145,28 @@ function render() {
   switch (state.screen) {
     case "intro":
       renderIntro();
-      return;
+      break;
     case "noPath":
       renderNoPath();
-      return;
+      break;
     case "briefing":
       renderBriefing();
-      return;
+      break;
     case "connecting":
       renderConnecting();
-      return;
+      break;
     case "ready":
       renderReady();
-      return;
+      break;
     case "chat":
       renderChat();
-      return;
+      break;
     default:
-      setScreen("intro");
+      state.screen = "intro";
+      renderIntro();
+      break;
   }
+  persistState();
 }
 
 function renderIntro() {
@@ -257,7 +317,9 @@ function renderConnecting() {
 
   const progressFill = document.getElementById("progressFill");
   const progressMeta = document.getElementById("progressMeta");
-  state.connectStartMs = Date.now();
+  if (!state.connectStartMs) {
+    state.connectStartMs = Date.now();
+  }
 
   state.connectTimer = setInterval(() => {
     const elapsed = Date.now() - state.connectStartMs;
@@ -368,7 +430,7 @@ async function handleChatSubmit(event) {
 
   if (state.userMessageCount >= LOCKED_CHAT_TURN) {
     state.messages.push({
-      role: "assistant",
+      role: "ai",
       text: LOCKED_CHAT_MESSAGE,
     });
     render();
@@ -397,9 +459,10 @@ async function handleChatSubmit(event) {
     }
 
     state.sessionId = payload.sessionId || state.sessionId;
+    const assistantRole = payload.shownToHuman === LOCKED_CHAT_MESSAGE ? "ai" : "assistant";
 
     state.messages.push({
-      role: "assistant",
+      role: assistantRole,
       text: payload.shownToHuman,
     });
   } catch (error) {

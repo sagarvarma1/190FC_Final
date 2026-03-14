@@ -309,7 +309,8 @@ button:hover,
 }
 
 .msg.user .bubble::before,
-.msg.assistant .bubble::before {
+.msg.assistant .bubble::before,
+.msg.ai .bubble::before {
   font-family: "IBM Plex Sans", "Arial", sans-serif;
   font-size: clamp(11px, 0.85vw, 14px);
   letter-spacing: 0.08em;
@@ -322,6 +323,10 @@ button:hover,
 
 .msg.assistant .bubble::before {
   content: "ALIEN: ";
+}
+
+.msg.ai .bubble::before {
+  content: "AI: ";
 }
 
 .msg-meta {
