@@ -287,7 +287,8 @@ button:hover,
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  min-height: 72vh;
+  height: calc(100vh - 130px);
+  min-height: 0;
 }
 
 .chat-log {
@@ -363,6 +364,10 @@ button:hover,
   outline: none;
 }
 
+.send-btn {
+  margin-left: 10px;
+}
+
 .trace {
   width: 100%;
   border-collapse: collapse;
@@ -424,7 +429,7 @@ button:hover,
   }
 
   .chat-layout {
-    min-height: 68vh;
+    height: calc(100vh - 120px);
   }
 
   .composer {

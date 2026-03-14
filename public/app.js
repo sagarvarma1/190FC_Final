@@ -300,6 +300,9 @@ function renderChat() {
       <div id="chatLog" class="chat-log">
         ${renderMessages(state.messages)}
       </div>
+      <div class="actions">
+        <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
+      </div>
       <form id="chatForm" class="composer">
         <input
           id="chatInput"
@@ -309,11 +312,8 @@ function renderChat() {
           autocomplete="off"
           ${state.waiting ? "disabled" : ""}
         />
-        <button class="btn-primary" type="submit" ${state.waiting ? "disabled" : ""}>TRANSMIT</button>
+        <button class="btn-primary send-btn" type="submit" ${state.waiting ? "disabled" : ""}>Send</button>
       </form>
-      <div class="actions">
-        <button id="globalAbortBtn" class="btn-danger" type="button">ABORT</button>
-      </div>
     </section>
   `);
 
