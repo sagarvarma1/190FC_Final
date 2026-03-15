@@ -54,7 +54,7 @@ const MIME_TYPES = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-const server = http.createServer(async (req, res) => {
+async function requestHandler(req, res) {
   try {
     pruneOldSessions();
 
@@ -147,12 +147,17 @@ const server = http.createServer(async (req, res) => {
       error: "Internal server error.",
     });
   }
-});
+}
 
-server.listen(PORT, HOST, () => {
-  console.log(`First-contact demo listening on http://${HOST}:${PORT}`);
-  console.log(`LLM provider: ${PROVIDER}`);
-});
+if (require.main === module) {
+  const server = http.createServer(requestHandler);
+  server.listen(PORT, HOST, () => {
+    console.log(`First-contact demo listening on http://${HOST}:${PORT}`);
+    console.log(`LLM provider: ${PROVIDER}`);
+  });
+}
+
+module.exports = requestHandler;
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {

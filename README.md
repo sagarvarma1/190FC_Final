@@ -50,3 +50,21 @@ If Anthropic is unavailable or fails, the app falls back to built-in mock alien 
 - `GET /api/health`
 - `POST /api/chat`
 - `POST /api/reset`
+
+## Deploy on Vercel
+
+1. Import this repo into Vercel.
+2. Framework preset: `Other`.
+3. No build command needed.
+4. Set environment variables:
+   - `LLM_PROVIDER=openai`
+   - `OPENAI_API_KEY=...`
+   - `OPENAI_MODEL=gpt-5.4`
+   - optional `OPENAI_BASE_URL=https://api.openai.com`
+5. Deploy.
+
+Local development still works with:
+
+```bash
+npm start
+```
